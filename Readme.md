@@ -130,7 +130,7 @@ Special thanks to the creator of the YouTube tutorial **"AI Cold Email Generator
 
 ## Instructions
 1. **Download and Save the Project**: `ATS Ninjas`
-2. Install Anaconda and create a conda environment
-3. cd to App and run pip install -r requrements.txt
+2. **Install Anaconda** and create a conda environment
+3. **cd to App** and run pip install -r requrements.txt
 4. **Run the Project**:
    streamlit run main.py
