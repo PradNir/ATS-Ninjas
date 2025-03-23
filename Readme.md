@@ -34,12 +34,11 @@ A system that automates and streamlines the workflow, delivering professional an
 **Processing**:
 1. Scrape job descriptions from the URL.
 2. Match the uploaded resume to job requirements using relevance scoring.
-3. Generate the document using LLMs (e.g., Llama 3.1 via LangChain).
+3. Generate the document using LLMs (e.g., Google Gemini via LangChain).
 
 **Output**:  
 A polished Word document featuring:
-- Dynamic content tailored to job descriptions.
-- Clickable contact links for easy interaction.
+- Tailored Cover Letter.
 
 ### Flowchart
 _Figure 1: Project Flowchart_
@@ -48,8 +47,8 @@ _Figure 1: Project Flowchart_
 
 ## Key Technologies
 - **Frontend**: Streamlit for the user interface.
-- **Backend**: Python with LangChain and ChromaDB.
-- **LLM**: Llama 3.1 via Groq API.
+- **Backend**: Python with LangChain.
+- **LLM**: gemini-2.0-pro-exp-02-05 via Google API.
 - **File Processing**: `python-docx` for Word generation.
 - **Data Cleaning**: Regular expressions for preprocessing.
 
@@ -67,8 +66,6 @@ _Figure 1: Project Flowchart_
 ### 3. **User-Friendly Interface**
 - Simplified input and output process via Streamlit.
 
-### 4. **Customizable Document Design**
-- Professional styles, including headers, recipient details, and footers.
 
 ---
 
@@ -78,18 +75,18 @@ _Figure 1: Project Flowchart_
    - **Resume**: Processed using `python-docx` or `PyPDF2`.
    - **Job Description**: Scraped and cleaned using LangChain's `WebBaseLoader`.
 3. **Matching**:
-   - Resume content matched to job requirements via ChromaDB.
+   - Resume content matched to job requirements via Gemini + prompt.
 4. **Content Generation**:
    - Prompts structured for LLMs to create cover letters or emails.
 5. **Output**:
-   - Documents formatted and saved as `.docx` files.
+   - Cover Letter Documents formatted and saved as `.docx` files.
 
 ---
 
 ## Results
 - **Cover Letters**: Tailored and professional, saving users time.
 - **Cold Emails**: Polished tone emphasizing relevant skills.
-- **User Feedback**: Highlights the utility of clickable contact links and polished formatting.
+- **User Feedback**: Highlights the ATS score of the given resume and reccomendations.
 
 _Figures:_
 - Streamlit-based UI
@@ -110,32 +107,33 @@ The AI-Driven Cover Letter and Cold Email Generator successfully automates the a
 - Expanding file format support.
 - Enhancing the user interface.
 - Integrating additional AI models for better accuracy.
+- Generating a Resume that matches the job description.
+- Features that utilize internal advocates that may refer the user into the output.
 
 ---
 
 ## Lessons Learned
-Inspired by a statement from Naresh Jasotani, "Start with projects that solve your problem," I embarked on this project independently. Through trial and error, I learned about LLMs, vector databases, and project implementation using YouTube tutorials. The journey was challenging but rewarding, teaching me the value of pursuing meaningful work.
+Inspired by a statement from Naresh Jasotani, "Start with projects that solve your problem," We embarked on this journey to help make the modern job search easier. Through trial and error, We integrated LLMs, Features, and project implementation using free resources on the internet. The journey was challenging but rewarding, teaching us the value of pursuing meaningful work.
 
 ---
 
 ## Acknowledgements
-Special thanks to the creator of the YouTube tutorial **"AI Cold Email Generator"** for foundational insights. Building on this knowledge, I added:
+Special thanks to the creator of the YouTube tutorial **"AI Cold Email Generator"** for foundational insights. Building on this knowledge, we added:
 - Cover letter generation.
-- Improved document formatting with clickable contact details.
-- Dynamic outputs tailored to job descriptions and resumes.
+- Dynamic output tailored to job descriptions and resumes.
 
 ---
 
 ## References
 - **Python Libraries**: LangChain, Streamlit, `python-docx`, PyPDF2.
-- **AI Models**: Llama 3.1 by Groq.
+- **AI Models**: gemini-2.0-pro-exp-02-05 by Google.
 - [YouTube Tutorial](https://youtu.be/CO4E_9V6li0?si=PAuaHRUFBV3BsIpK)
 
 ---
 
 ## Instructions
-1. **Download and Save the Project**: `Renovated_cold_email_generator`
-2. **Run the Project**:
-   ```bash
-   cd app
+1. **Download and Save the Project**: `ATS Ninjas`
+2. Install Anaconda and create a conda environment
+3. cd to App and run pip install -r requrements.txt
+4. **Run the Project**:
    streamlit run main.py
