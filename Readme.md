@@ -40,9 +40,6 @@ A system that automates and streamlines the workflow, delivering professional an
 A polished Word document featuring:
 - Tailored Cover Letter.
 
-### Flowchart
-_Figure 1: Project Flowchart_
-
 ---
 
 ## Key Technologies
