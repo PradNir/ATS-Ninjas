@@ -1,22 +1,40 @@
-# Streamlit app
+# ---------------------------
+# Streamlit App Dependencies
+# ---------------------------
 streamlit
 
-# Environment variables
+# ---------------------------
+# Environment Management
+# ---------------------------
 python-dotenv
 
-# For scraping pages (via langchain_community document loader)
+# ---------------------------
+# Web Scraping (LangChain uses these internally)
+# ---------------------------
 requests
 beautifulsoup4
 
-# For extracting PDF and DOCX text
+# ---------------------------
+# PDF and Word Document Processing
+# ---------------------------
 PyPDF2
-python-docx
+python-docx  # Handles .docx extraction and generation
 
-# LangChain + Google Gemini
+# ---------------------------
+# LangChain & Gemini (Google Generative AI)
+# ---------------------------
 langchain-core
+langchain_community
 langchain-google-genai
 google-generativeai
-langchain_community
 
-# For generating Word docs
-docx  # In practice, "python-docx" is what's installed, included above
+# ---------------------------
+# NLP / Keyword Filtering
+# ---------------------------
+spacy
+tiktoken  # Optional but useful for token-based scoring (like ATS analysis)
+
+# ---------------------------
+# Post-install step (manual)
+# ---------------------------
+# Run this after installing: python -m spacy download en_core_web_sm
