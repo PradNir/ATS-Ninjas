@@ -71,15 +71,14 @@ class GeminiClient:
 
             ### INSTRUCTION:
             The scraped text is from a careers page.
-            Extract job postings and return them in valid JSON with:
-            role, experience, skills, description.
+            Extract job postings in valid JSON with keys: role, experience, skills, description.
+            Return JSON only.
             """
         )
         chain_extract = prompt_extract | self.llm
         res = chain_extract.invoke({"page_data": cleaned_text})
         raw = res.content.strip()
 
-        # Remove numeric keys + trailing commas, fix quotes
         raw = re.sub(r"\n?\s*\d+\s*:", "", raw)
         raw = re.sub(r",(\s*[\]}])", r"\1", raw)
         raw = raw.replace("“", "\"").replace("”", "\"")
@@ -111,15 +110,16 @@ class GeminiClient:
             ask if they need additional information to keep the process moving forward.
             
             keep it to less then 100 words 
-            
+           
             """
         )
         chain_email = prompt_email | self.llm
-        res = chain_email.invoke({"job_desc": str(job_description), "link_list": links})
-        return res.content
+        res = chain_email.invoke({"job_desc": job_description, "link_list": links})
+        return res.content.strip()
 
     def write_cover_letter(self, resume, job_description, links):
         prompt_cover = PromptTemplate.from_template(
+
         f"""
         ### TASK:
         Write a professional cover letter for the resume holder.
@@ -174,7 +174,7 @@ class GeminiClient:
             "job_desc": job_description,
             "link_list": links
         })
-        return res.content
+        return res.content.strip()
 
     def save_cover_letter(self, content, filename="Cover_Letter.docx"):
         name, email, phone = extract_data_from_resume(content)
@@ -223,8 +223,7 @@ class GeminiClient:
 
         #doc.add_paragraph("\nDear Sir,\n")
 
-        paragraphs = content.split("\n\n")
-        for paragraph in paragraphs:
+        for paragraph in content.split("\n\n"):
             doc.add_paragraph(paragraph).style.font.size = Pt(12)
 
         #doc.add_paragraph("\nSincerely,")
@@ -232,3 +231,50 @@ class GeminiClient:
 
         doc.save(filename)
         return filename
+
+    def calculate_ats_score(self, resume_text, job_description_text):
+        prompt = PromptTemplate.from_template(
+            """
+            You are an expert in Application Tracking Systems (ATS).
+
+            ### Resume:
+            {resume}
+
+            ### Job Description:
+            {job_desc}
+
+            ### Task:
+            - Calculate an ATS compatibility score (0-100).
+            - List matched and missing keywords.
+            - Provide short actionable recommendations.
+
+            Return JSON only in this format:
+            {{
+                "ats_score": <number>,
+                "matched_keywords": ["keyword1", ...],
+                "missing_keywords": ["keyword1", ...],
+                "recommendations": ["suggestion1", ...]
+            }}
+            """
+        )
+
+        chain_ats = prompt | self.llm
+        res = chain_ats.invoke({
+            "resume": resume_text,
+            "job_desc": job_description_text
+        })
+
+        raw_response = res.content.strip()
+
+        # Fix for markdown-wrapped JSON
+        if raw_response.startswith("```json"):
+            raw_response = raw_response.replace("```json", "").replace("```", "").strip()
+        elif raw_response.startswith("```"):
+            raw_response = raw_response.replace("```", "").strip()
+
+        try:
+            ats_results = json.loads(raw_response)
+            return ats_results
+        except json.JSONDecodeError:
+            raise ValueError(f"Gemini returned invalid JSON: {raw_response}")
+
