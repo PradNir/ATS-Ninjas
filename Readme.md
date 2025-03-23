@@ -26,6 +26,9 @@ A system that automates and streamlines the workflow, delivering professional an
 
 ---
 
+# How We Built It  
+We combined **text-scraping tools** to extract and clean the job posting data. Next, we integrated **Google’s advanced language model (Gemini) via LangChain** to analyze your resume (if provided) alongside the job details. The system then crafts a tailored cover letter by matching the role requirements to the highlights of your background.  
+
 ## System Design and Architecture
 
 **Input**:  
@@ -84,6 +87,10 @@ A polished Word document featuring:
 - **Cover Letters**: Tailored and professional, saving users time.
 - **Cold Emails**: Polished tone emphasizing relevant skills.
 - **User Feedback**: Highlights the ATS score of the given resume and reccomendations.
+
+
+# How We Built It  
+We combined **text-scraping tools** to extract and clean the job posting data. Next, we integrated **Google’s advanced language model (Gemini) via LangChain** to analyze your resume (if provided) alongside the job details. The system then crafts a tailored cover letter by matching the role requirements to the highlights of your background.  
 
 _Figures:_
 - Streamlit-based UI
