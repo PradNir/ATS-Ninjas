@@ -1,26 +1,22 @@
-# Core dependencies
+# Streamlit app
 streamlit
+
+# Environment variables
 python-dotenv
-pandas
-uuid
 
-# Gemini API
-google-generativeai==0.8.4
+# For scraping pages (via langchain_community document loader)
+requests
+beautifulsoup4
 
-# LangChain for prompt handling (used with older implementation or hybrids)
-langchain-core
-langchain-community
-
-# PDF and DOCX parsing
+# For extracting PDF and DOCX text
 PyPDF2
 python-docx
 
-# ChromaDB for vector store (for portfolio querying)
-chromadb
+# LangChain + Google Gemini
+langchain-core
+langchain-google-genai
+google-generativeai
+langchain_community
 
-# Optional but helpful for API response formatting
-tqdm
-
-# Web scraping
-beautifulsoup4
-requests
+# For generating Word docs
+docx  # In practice, "python-docx" is what's installed, included above
