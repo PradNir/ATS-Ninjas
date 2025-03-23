@@ -49,15 +49,14 @@ class GeminiClient:
 
             ### INSTRUCTION:
             The scraped text is from a careers page.
-            Extract job postings and return them in valid JSON with:
-            role, experience, skills, description.
+            Extract job postings in valid JSON with keys: role, experience, skills, description.
+            Return JSON only.
             """
         )
         chain_extract = prompt_extract | self.llm
         res = chain_extract.invoke({"page_data": cleaned_text})
         raw = res.content.strip()
 
-        # Remove numeric keys + trailing commas, fix quotes
         raw = re.sub(r"\n?\s*\d+\s*:", "", raw)
         raw = re.sub(r",(\s*[\]}])", r"\1", raw)
         raw = raw.replace("“", "\"").replace("”", "\"")
@@ -77,24 +76,25 @@ class GeminiClient:
             {job_desc}
 
             ### TASK:
-            Write a cold email from Pradhum Niroula about the above job.
+            Write a concise and professional cold email from Pradhum Niroula.
             Reference these links: {link_list}.
-            Return only the email text.
+            Return only email text without preamble.
             """
         )
         chain_email = prompt_email | self.llm
-        res = chain_email.invoke({"job_desc": str(job_description), "link_list": links})
-        return res.content
+        res = chain_email.invoke({"job_desc": job_description, "link_list": links})
+        return res.content.strip()
 
     def write_cover_letter(self, resume, job_description, links):
         prompt_cover = PromptTemplate.from_template(
             """
             ### INSTRUCTION:
             You are Pradhum Niroula applying for a job.
-            - Resume: {resume_data}
-            - Description: {job_desc}
-            - Links: {link_list}
-            Write a cover letter with no extra text.
+            Resume: {resume_data}
+            Job Description: {job_desc}
+            Links: {link_list}
+            
+            Write a tailored, professional cover letter. Return only the letter text.
             """
         )
         chain_cover = prompt_cover | self.llm
@@ -103,7 +103,7 @@ class GeminiClient:
             "job_desc": job_description,
             "link_list": links
         })
-        return res.content
+        return res.content.strip()
 
     def save_cover_letter(self, content, filename="Cover_Letter.docx"):
         doc = Document()
@@ -134,8 +134,7 @@ class GeminiClient:
 
         doc.add_paragraph("\nDear Sir,\n")
 
-        paragraphs = content.split("\n\n")
-        for paragraph in paragraphs:
+        for paragraph in content.split("\n\n"):
             doc.add_paragraph(paragraph).style.font.size = Pt(12)
 
         doc.add_paragraph("\nSincerely,")
@@ -143,3 +142,50 @@ class GeminiClient:
 
         doc.save(filename)
         return filename
+
+    def calculate_ats_score(self, resume_text, job_description_text):
+        prompt = PromptTemplate.from_template(
+            """
+            You are an expert in Application Tracking Systems (ATS).
+
+            ### Resume:
+            {resume}
+
+            ### Job Description:
+            {job_desc}
+
+            ### Task:
+            - Calculate an ATS compatibility score (0-100).
+            - List matched and missing keywords.
+            - Provide short actionable recommendations.
+
+            Return JSON only in this format:
+            {{
+                "ats_score": <number>,
+                "matched_keywords": ["keyword1", ...],
+                "missing_keywords": ["keyword1", ...],
+                "recommendations": ["suggestion1", ...]
+            }}
+            """
+        )
+
+        chain_ats = prompt | self.llm
+        res = chain_ats.invoke({
+            "resume": resume_text,
+            "job_desc": job_description_text
+        })
+
+        raw_response = res.content.strip()
+
+        # Fix for markdown-wrapped JSON
+        if raw_response.startswith("```json"):
+            raw_response = raw_response.replace("```json", "").replace("```", "").strip()
+        elif raw_response.startswith("```"):
+            raw_response = raw_response.replace("```", "").strip()
+
+        try:
+            ats_results = json.loads(raw_response)
+            return ats_results
+        except json.JSONDecodeError:
+            raise ValueError(f"Gemini returned invalid JSON: {raw_response}")
+
